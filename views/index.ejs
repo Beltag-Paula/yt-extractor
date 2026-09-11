@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+    <h1>YouTube Downloader</h1>
+
+    <form action="/download" method="POST">
+
+        <input type="text" name="url" placeholder="YouTube URL" required>
+
+        <button type="submit">Inspect</button>
+
+    </form>
+
+
+    <% if (info) { %>
+
+        <h2>
+            <%= info.title %>
+        </h2>
+
+        <p>Duration: <%= info.duration %> seconds</p>
+
+
+        <% if (info.thumbnail) { %>
+
+            <img src="<%= info.thumbnail %>" alt="Video thumbnail" width="400">
+
+            <% } %>
+
+
+                <h3>Video formats</h3>
+
+                <ul>
+
+                    <% info.videoFormats.forEach(format=> { %>
+
+                        <li>
+                            ID: <%= format.format_id %>
+                                |
+                                Extension: <%= format.ext %>
+                                    |
+                                    Resolution: <%= format.resolution %>
+                                        |
+                                        Video codec: <%= format.vcodec %>
+                                            |
+                                            Audio codec: <%= format.acodec %>
+                        </li>
+
+                        <% }) %>
+
+                </ul>
+
+
+                <h3>Audio formats</h3>
+
+                <ul>
+
+                    <% info.audioFormats.forEach(format=> { %>
+
+                        <li>
+                            ID: <%= format.format_id %>
+                                |
+                                Extension: <%= format.ext %>
+                                    |
+                                    Audio codec: <%= format.acodec %>
+                                        |
+                                        Bitrate: <%= format.abr || 'N/A' %> kbps
+                        </li>
+
+                        <% }) %>
+
+                </ul>
+
+
+                <h3>Subtitles</h3>
+
+                <% if (info.subtitles.length> 0) { %>
+
+                    <ul>
+                        <% info.subtitles.forEach(language=> { %>
+                            <li>
+                                <%= language %>
+                            </li>
+                            <% }) %>
+                    </ul>
+
+                    <% } else { %>
+
+                        <p>No manually provided subtitles.</p>
+
+                        <% } %>
+
+
+                            <h3>Automatic captions</h3>
+
+                            <% if (info.automaticCaptions.length> 0) { %>
+
+                                <ul>
+                                    <% info.automaticCaptions.forEach(language=> { %>
+                                        <li>
+                                            <%= language %>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+
+                                <% } else { %>
+
+                                    <p>No automatic captions.</p>
+
+                                    <% } %>
+
+                                        <% } %>
+
+</body>
+
+</html>
