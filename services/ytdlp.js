@@ -1,3 +1,4 @@
+const { channel } = require('node:diagnostics_channel');
 const { YtDlp } = require('ytdlp-nodejs');
 
 const ytdlp = new YtDlp();
@@ -27,6 +28,7 @@ const inspectVideo = async (url) => {
 
     return {
         title: info.title,
+        channel: info.channel,
         duration: info.duration,
         thumbnail: bestThumbnail?.url,
 
