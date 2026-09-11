@@ -6,113 +6,214 @@
 
     <h1>YouTube Downloader</h1>
 
-    <form action="/download" method="POST">
+    <!-- INSPECT FORM -->
 
-        <input type="text" name="url" placeholder="YouTube URL" required>
+    <form action="/inspect" method="POST">
 
-        <button type="submit">Inspect</button>
+        <input
+            type="text"
+            name="url"
+            placeholder="YouTube URL"
+            required
+        >
+
+        <button type="submit">
+            Inspect
+        </button>
 
     </form>
 
 
     <% if (info) { %>
 
+        <hr>
+
         <h2>
-            <%= info.title %> by <%= info.channel %>
+            <%= info.title %>
         </h2>
 
-        <p>Duration: <%= info.duration %> seconds</p>
+        <p>
+            Channel: <%= info.uploader %>
+        </p>
+
+        <img
+            src="<%= info.thumbnail %>"
+            width="400"
+        >
 
 
-        <% if (info.thumbnail) { %>
+        <!-- 1. VIDEO -->
 
-            <img src="<%= info.thumbnail %>" alt="Video thumbnail" width="400">
+        <section>
 
-            <% } %>
+            <h2>Download Video</h2>
 
+            <form action="/download/video" method="POST">
 
-                <h3>Video formats</h3>
+                <input
+                    type="hidden"
+                    name="url"
+                    value="<%= url %>"
+                >
 
-                <ul>
+                <label>
+                    <input
+                        type="radio"
+                        name="quality"
+                        value="low"
+                        required
+                    >
+                    Low
+                </label>
 
-                    <% info.videoFormats.forEach(format=> { %>
+                <label>
+                    <input
+                        type="radio"
+                        name="quality"
+                        value="medium"
+                    >
+                    Medium
+                </label>
 
-                        <li>
-                            ID: <%= format.format_id %>
-                                |
-                                Extension: <%= format.ext %>
-                                    |
-                                    Resolution: <%= format.resolution %>
-                                        |
-                                        Video codec: <%= format.vcodec %>
-                                            |
-                                            Audio codec: <%= format.acodec %>
-                        </li>
+                <label>
+                    <input
+                        type="radio"
+                        name="quality"
+                        value="best"
+                    >
+                    Best
+                </label>
 
-                        <% }) %>
+                <button type="submit">
+                    Download MP4
+                </button>
 
-                </ul>
+            </form>
 
-
-                <h3>Audio formats</h3>
-
-                <ul>
-
-                    <% info.audioFormats.forEach(format=> { %>
-
-                        <li>
-                            ID: <%= format.format_id %>
-                                |
-                                Extension: <%= format.ext %>
-                                    |
-                                    Audio codec: <%= format.acodec %>
-                                        |
-                                        Bitrate: <%= format.abr || 'N/A' %> kbps
-                        </li>
-
-                        <% }) %>
-
-                </ul>
-
-
-                <h3>Subtitles</h3>
-
-                <% if (info.subtitles.length> 0) { %>
-
-                    <ul>
-                        <% info.subtitles.forEach(language=> { %>
-                            <li>
-                                <%= language %>
-                            </li>
-                            <% }) %>
-                    </ul>
-
-                    <% } else { %>
-
-                        <p>No manually provided subtitles.</p>
-
-                        <% } %>
+        </section>
 
 
-                            <h3>Automatic captions</h3>
+        <!-- 2. AUDIO -->
 
-                            <% if (info.automaticCaptions.length> 0) { %>
+        <section>
 
-                                <ul>
-                                    <% info.automaticCaptions.forEach(language=> { %>
-                                        <li>
-                                            <%= language %>
-                                        </li>
-                                        <% }) %>
-                                </ul>
+            <h2>Download Audio</h2>
 
-                                <% } else { %>
+            <form action="/download/audio" method="POST">
 
-                                    <p>No automatic captions.</p>
+                <input
+                    type="hidden"
+                    name="url"
+                    value="<%= url %>"
+                >
 
-                                    <% } %>
+                <label>
+                    <input
+                        type="radio"
+                        name="quality"
+                        value="low"
+                        required
+                    >
+                    Low
+                </label>
 
-                                        <% } %>
+                <label>
+                    <input
+                        type="radio"
+                        name="quality"
+                        value="medium"
+                    >
+                    Medium
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="quality"
+                        value="best"
+                    >
+                    Best
+                </label>
+
+                <button type="submit">
+                    Download MP3
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- 3. SUBTITLES -->
+
+        <section>
+
+            <h2>Download Captions</h2>
+
+            <form action="/download/caption" method="POST">
+
+                <input
+                    type="hidden"
+                    name="url"
+                    value="<%= url %>"
+                >
+
+                <select name="language" required>
+
+                    <option value="">
+                        Select language
+                    </option>
+
+                    <% info.subtitles.forEach(language => { %>
+
+                        <option value="<%= language %>|subtitle">
+                            <%= language %> (Subtitle)
+                        </option>
+
+                    <% }) %>
+
+                    <% info.automaticCaptions.forEach(language => { %>
+
+                        <option value="<%= language %>|automatic">
+                            <%= language %> (Automatic)
+                        </option>
+
+                    <% }) %>
+
+                </select>
+
+                <button type="submit">
+                    Download Caption
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- 4. THUMBNAIL -->
+
+        <section>
+
+            <h2>Download Thumbnail</h2>
+
+            <form action="/download/thumbnail" method="POST">
+
+                <input
+                    type="hidden"
+                    name="url"
+                    value="<%= url %>"
+                >
+
+                <button type="submit">
+                    Download Best Quality Thumbnail
+                </button>
+
+            </form>
+
+        </section>
+
+    <% } %>
 
 </body>
 
